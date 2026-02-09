@@ -103,6 +103,36 @@ public class PedidoDAO {
     }
 
     /**
+     * Recoge la lista por categoría concreta
+     * @param categoria
+     * @return 
+     */
+    public ArrayList<Pedido> listaPedidosPorCategoria(String categoria) {
+        ArrayList<Pedido> listaPedidos = new ArrayList<>();
+        Pedido pedido = null;
+        String sql = "SELECT * FROM PEDIDOS WHERE CATEGORIA = ?";
+        try {
+            PreparedStatement sentencia = conexion.prepareStatement(sql);
+            sentencia.setString(1, categoria);
+            ResultSet rs = sentencia.executeQuery();
+             while (rs.next()) {
+                int id = rs.getInt("id_pedido");
+                String producto = rs.getString("producto");
+                Double precioUnitario = rs.getDouble("precio_unitario");
+                int cantidad = rs.getInt("cantidad");
+                Date fechaPedido = rs.getDate("fecha_pedido");
+
+                pedido = new Pedido(id, producto, categoria, precioUnitario, cantidad, fechaPedido);
+                listaPedidos.add(pedido);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al consultar pedidos por categoría: " + e.getMessage());
+        }
+
+        return listaPedidos;
+    }
+
+    /**
      * Finaliza la conexión con la BD
      */
     public void cerrarConexion() {

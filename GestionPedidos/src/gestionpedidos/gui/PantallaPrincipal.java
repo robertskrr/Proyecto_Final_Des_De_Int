@@ -4,10 +4,12 @@
  */
 package gestionpedidos.gui;
 
+import gestionpedidos.dto.Pedido;
 import gestionpedidos.logica.PedidoDAO;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.table.DefaultTableModel;
@@ -19,13 +21,13 @@ import javax.swing.table.TableRowSorter;
  * @author Robert
  */
 public class PantallaPrincipal extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(PantallaPrincipal.class.getName());
-    
+
     private DefaultTableModel dtm;
-    
+
     private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-    
+
     public static PedidoDAO bdPedidos = new PedidoDAO();
 
     /**
@@ -92,6 +94,11 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         jMenu.add(jItemInforme);
 
         jItemSalir.setText(org.openide.util.NbBundle.getMessage(PantallaPrincipal.class, "PantallaPrincipal.jItemSalir.text")); // NOI18N
+        jItemSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jItemSalirActionPerformed(evt);
+            }
+        });
         jMenu.add(jItemSalir);
 
         jMenuBar.add(jMenu);
@@ -115,14 +122,45 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private void jItemNewPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jItemNewPedidoActionPerformed
         NuevoPedido jDialogNewPedido = new NuevoPedido(this, true);
         jDialogNewPedido.setVisible(true);
-        
-        refrescarDatosTabla();
+
+        refrescarDatosTabla(bdPedidos.listaPedidos());
     }//GEN-LAST:event_jItemNewPedidoActionPerformed
 
     private void jItemVerPedidosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jItemVerPedidosActionPerformed
-        
-        refrescarDatosTabla();
+        String[] opciones = {"Todos", "Tecnología", "Alimentación", "Hogar", "Otro"};
+
+        String seleccion = (String) javax.swing.JOptionPane.showInputDialog(
+                this,
+                "¿Qué categoría deseas visualizar?",
+                "Filtrar Pedidos",
+                javax.swing.JOptionPane.QUESTION_MESSAGE,
+                null,
+                opciones,
+                opciones[0]);
+
+        if (seleccion != null) {
+            List<Pedido> resultado;
+
+            if (seleccion.equals("Todos")) {
+                resultado = bdPedidos.listaPedidos();
+            } else {
+                resultado = bdPedidos.listaPedidosPorCategoria(seleccion);
+            }
+
+            if (resultado.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No hay pedidos en la categoría: " + seleccion, "No resultados", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            refrescarDatosTabla(resultado);
+        }
+
     }//GEN-LAST:event_jItemVerPedidosActionPerformed
+
+    private void jItemSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jItemSalirActionPerformed
+        dispose();
+        System.exit(0);
+    }//GEN-LAST:event_jItemSalirActionPerformed
 
     /**
      * @param args the command line arguments
@@ -160,17 +198,17 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     private javax.swing.JTable jTable;
     // End of variables declaration//GEN-END:variables
 
-    private void refrescarDatosTabla() {
+    private void refrescarDatosTabla(List<Pedido> listaPedidos) {
         dtm.setRowCount(0);
 
         // Si no hay datos en la BD no refresca
-        if (bdPedidos.listaPedidos().isEmpty()) {
+        if (listaPedidos.isEmpty()) {
             return;
         }
         // Recoge los datos de la BD
-        bdPedidos.listaPedidos().forEach(p ->
-                dtm.addRow(new Object[]{p.getId(), p.getProducto(), p.getCategoria(), p.getPrecioUnitario(), p.getCantidad(), sdf.format(p.getFechaPedido())}));
-        
+        listaPedidos.forEach(p
+                -> dtm.addRow(new Object[]{p.getId(), p.getProducto(), p.getCategoria(), p.getPrecioUnitario(), p.getCantidad(), sdf.format(p.getFechaPedido())}));
+
         // Forzar la reordenación
         RowSorter<? extends TableModel> sorter = jTable.getRowSorter();
         if (sorter != null) {
@@ -193,16 +231,16 @@ public class PantallaPrincipal extends javax.swing.JFrame {
                 return Object.class;
             }
         };
-        
+
         String[] titulos = new String[]{"ID", "Producto", "Categoría", "Precio Ud.", "Cantidad", "Fecha"};
-        
+
         dtm.setColumnIdentifiers(titulos);
-        
+
         jTable.setModel(dtm);
 
         // Sorter
         TableRowSorter<TableModel> sorter = new TableRowSorter<>(jTable.getModel());
-        
+
         jTable.setRowSorter(sorter);
 
         // Configurar orden
@@ -216,13 +254,13 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         sorter.setSortKeys(sortKeys);
 
         // Refrescamos los datos
-        refrescarDatosTabla();
+        refrescarDatosTabla(bdPedidos.listaPedidos());
     }
 
     /**
      * Cambia el icono de la app
      */
     private void cambiarIconoApp() {
-        
+
     }
 }
