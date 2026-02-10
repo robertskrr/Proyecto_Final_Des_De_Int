@@ -313,11 +313,11 @@ ORDER BY categoria ASC]]>
 	<summary>
 		<band height="347" splitType="Stretch">
 			<textField pattern="#,##0.##¤;#,##0.##- ¤">
-				<reportElement mode="Transparent" x="0" y="0" width="170" height="60" forecolor="#536302" backcolor="#030303" uuid="3e13e106-d53a-4104-84e1-a85917777e76"/>
+				<reportElement mode="Transparent" x="0" y="0" width="550" height="60" forecolor="#536302" backcolor="#030303" uuid="3e13e106-d53a-4104-84e1-a85917777e76"/>
 				<textElement>
 					<font size="14" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["TOTAL GENERAL: " + $V{v_total_general} + "€"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["TOTAL GENERAL: " + new java.text.DecimalFormat("#,##0.00").format($V{v_total_general}) + "€"]]></textFieldExpression>
 			</textField>
 			<pieChart>
 				<chart evaluationTime="Report">
