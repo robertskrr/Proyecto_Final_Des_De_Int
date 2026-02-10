@@ -143,4 +143,10 @@ public class PedidoDAO {
         }
     }
 
+    public Connection getConexion() {
+        return conexion;
+    }
+    
+    
+
 }

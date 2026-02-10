@@ -91,6 +91,11 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         jMenu.add(jItemVerPedidos);
 
         jItemInforme.setText(org.openide.util.NbBundle.getMessage(PantallaPrincipal.class, "PantallaPrincipal.jItemInforme.text")); // NOI18N
+        jItemInforme.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jItemInformeActionPerformed(evt);
+            }
+        });
         jMenu.add(jItemInforme);
 
         jItemSalir.setText(org.openide.util.NbBundle.getMessage(PantallaPrincipal.class, "PantallaPrincipal.jItemSalir.text")); // NOI18N
@@ -161,6 +166,11 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         dispose();
         System.exit(0);
     }//GEN-LAST:event_jItemSalirActionPerformed
+
+    private void jItemInformeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jItemInformeActionPerformed
+        GenerarInforme jDialogInforme = new GenerarInforme(this, true);
+        jDialogInforme.setVisible(true);
+    }//GEN-LAST:event_jItemInformeActionPerformed
 
     /**
      * @param args the command line arguments
