@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 5.5.2  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="GestionPedidos" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="13acf49e-4913-4d1b-bccc-113817ad15d1">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="GestionPedidos" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="13acf49e-4913-4d1b-bccc-113817ad15d1">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="GestionPedidos"/>
 	<style name="Title" forecolor="#FFFFFF" fontName="Times New Roman" fontSize="50" isBold="false"/>
@@ -105,7 +105,7 @@ ORDER BY categoria ASC]]>
 					<textElement>
 						<font size="12" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA["Total "+ $F{categoria} + ": "+ $V{v_total_categoria} + "€"]]></textFieldExpression>
+					<textFieldExpression><![CDATA["Total " + $F{categoria} + ": " + new java.text.DecimalFormat("#,##0.00").format($V{v_total_categoria}) + " €"]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
@@ -229,7 +229,7 @@ ORDER BY categoria ASC]]>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{categoria}]]></textFieldExpression>
 				</textField>
-				<textField>
+				<textField pattern="#,##0.##¤;#,##0.##- ¤">
 					<reportElement x="176" y="0" width="100" height="18" uuid="a5605c99-90eb-4902-a1a4-c6d3db997d37">
 						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="16e5ce02-a516-46c7-bfdd-f79bd438ed3b"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -237,7 +237,7 @@ ORDER BY categoria ASC]]>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{precio_unitario} + "€"]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{precio_unitario}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="276" y="0" width="92" height="18" uuid="518ba365-b34e-4098-a785-0a3d64d76713">
@@ -249,7 +249,7 @@ ORDER BY categoria ASC]]>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{cantidad}]]></textFieldExpression>
 				</textField>
-				<textField>
+				<textField pattern="dd/MM/yyyy">
 					<reportElement x="462" y="0" width="92" height="18" uuid="b99580d6-7d17-40f3-b5e7-d0efb21005e5">
 						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="898539e6-dcac-46b3-b4bd-daf5da2f7a57"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -259,7 +259,7 @@ ORDER BY categoria ASC]]>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{fecha_pedido}]]></textFieldExpression>
 				</textField>
-				<textField>
+				<textField pattern="#,##0.##¤;#,##0.##- ¤">
 					<reportElement x="370" y="0" width="92" height="18" uuid="66027fa0-5570-4e3e-afdc-06ae4bafa7d2">
 						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="62bb3fad-efba-4f41-80bf-70a6b1f7ff62"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -267,7 +267,7 @@ ORDER BY categoria ASC]]>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{importe} + "€"]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{importe}]]></textFieldExpression>
 				</textField>
 			</frame>
 		</band>
@@ -321,7 +321,7 @@ ORDER BY categoria ASC]]>
 			</textField>
 			<pieChart>
 				<chart evaluationTime="Report">
-					<reportElement x="320" y="80" width="200" height="200" uuid="d3e452fb-d3a9-454c-85c6-32df33847b0b"/>
+					<reportElement x="300" y="70" width="250" height="200" uuid="d3e452fb-d3a9-454c-85c6-32df33847b0b"/>
 					<chartTitle/>
 					<chartSubtitle/>
 					<chartLegend/>
@@ -339,7 +339,7 @@ ORDER BY categoria ASC]]>
 			</pieChart>
 			<barChart>
 				<chart evaluationTime="Report">
-					<reportElement x="20" y="90" width="200" height="200" uuid="e08cf309-39fe-4195-b844-7355a1b76ba8"/>
+					<reportElement x="2" y="70" width="257" height="200" uuid="e08cf309-39fe-4195-b844-7355a1b76ba8"/>
 					<chartTitle/>
 					<chartSubtitle/>
 					<chartLegend/>

@@ -234,9 +234,9 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         dtm = new DefaultTableModel() {
             @Override
             public Class getColumnClass(int columna) {
-                if (columna != 3) {
+                if (columna != 0) {
                 } else {
-                    return Double.class;
+                    return Integer.class;
                 }
                 return Object.class;
             }

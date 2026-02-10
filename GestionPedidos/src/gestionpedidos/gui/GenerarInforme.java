@@ -29,6 +29,8 @@ public class GenerarInforme extends javax.swing.JDialog {
     public GenerarInforme(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        // Esto obliga a Jasper a usar el compilador de tu JDK 24 en lugar del JDT viejo
+        System.setProperty("net.sf.jasperreports.compiler.jrxml", "net.sf.jasperreports.engine.design.JRJavacCompiler");
     }
 
     /**
@@ -84,24 +86,26 @@ public class GenerarInforme extends javax.swing.JDialog {
                 .addComponent(jButtonGenerar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(119, 119, 119))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(121, 121, 121)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabelFechaFin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabelFechaInicio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabelCategoria, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jComboBoxCategoria, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(4, 4, 4))
-                    .addComponent(jDateChooserInicio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(121, 121, 121)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabelFechaFin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabelFechaInicio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabelCategoria, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jDateChooserInicio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(7, 7, 7)
+                                .addComponent(jDateChooserFin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jComboBoxCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addComponent(jDateChooserFin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addGap(92, 92, 92))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(100, 100, 100)
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(100, 100, 100)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(72, 72, 72))
         );
         layout.setVerticalGroup(
@@ -135,47 +139,6 @@ public class GenerarInforme extends javax.swing.JDialog {
 
     private void jButtonGenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGenerarActionPerformed
         try {
-            // 1. Recoger datos
-            String seleccion = jComboBoxCategoria.getSelectedItem().toString();
-            Date fechaInicio = jDateChooserInicio.getDate();
-            Date fechaFin = jDateChooserFin.getDate();
-
-            Map<String, Object> parametros = new HashMap<>();
-            parametros.put("p_categoria", (seleccion.equals("Todos")) ? null : seleccion);
-            parametros.put("p_fecha_inicio", fechaInicio);
-            parametros.put("p_fecha_fin", fechaFin);
-
-            // 2. Intentar cargar el .jrxml (Igual que en tu proyecto de prueba)
-            // Usamos la ruta relativa si el archivo está en el mismo paquete
-            // O una ruta absoluta verificada
-            InputStream archivoFuente = GenerarInforme.class.getResourceAsStream("/gestionpedidos/report/GestionPedidos.jrxml");
-
-            if (archivoFuente == null) {
-                JOptionPane.showMessageDialog(this, "No se encontró el archivo .jrxml. Verifica que esté en src/gestionpedidos/report/");
-                return;
-            }
-
-            // Esto indica a Jasper que use el javac de tu JDK 24
-            System.setProperty("net.sf.jasperreports.compiler.jrxml", "net.sf.jasperreports.engine.design.JRJavacCompiler");
-
-            Connection con = bdPedidos.getConexion();
-
-            // 4. Compilar y llenar (Como en Prueba_jdbc)
-            JasperReport jr = JasperCompileManager.compileReport(archivoFuente);
-            JasperPrint jp = JasperFillManager.fillReport(jr, parametros, con);
-
-            if (jp.getPages().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Sin resultados.");
-            } else {
-                JasperViewer viewer = new JasperViewer(jp, false);
-                viewer.setVisible(true);
-            }
-        } catch (JRException e) {
-            // Si aquí sale el error de "java.lang.String", es por falta de la librería JDT o configuración del JDK
-            JOptionPane.showMessageDialog(this, "Error de Compilación: " + e.getMessage());
-            e.printStackTrace();
-        }
-        /* try {
             String seleccion = jComboBoxCategoria.getSelectedItem().toString();
             Date fechaInicio = jDateChooserInicio.getDate();
             Date fechaFin = jDateChooserFin.getDate();
@@ -195,8 +158,6 @@ public class GenerarInforme extends javax.swing.JDialog {
             }
 
             Connection con = bdPedidos.getConexion();
-            // Forzar a Jasper a buscar el compilador de Java correctamente
-            System.setProperty("net.sf.jasperreports.compiler.jrxml", "net.sf.jasperreports.engine.design.JRJavacCompiler");
             JasperReport jr = JasperCompileManager.compileReport(archivoFuente);
             JasperPrint jp = JasperFillManager.fillReport(jr, parametros, con);
 
@@ -209,10 +170,11 @@ public class GenerarInforme extends javax.swing.JDialog {
                 JasperViewer viewer = new JasperViewer(jp, false);
                 viewer.setTitle("Informe de Gestión de Pedidos");
                 viewer.setVisible(true);
+                this.dispose();
             }
         } catch (JRException e) {
             System.err.println("Error: " + e.getMessage());
-        }*/
+        }
 
     }//GEN-LAST:event_jButtonGenerarActionPerformed
 
