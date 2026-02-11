@@ -217,7 +217,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         }
         // Recoge los datos de la BD
         listaPedidos.forEach(p
-                -> dtm.addRow(new Object[]{p.getId(), p.getProducto(), p.getCategoria(), p.getPrecioUnitario(), p.getCantidad(), sdf.format(p.getFechaPedido())}));
+                -> dtm.addRow(new Object[]{p.getId(), p.getProducto(), p.getCategoria(), p.getPrecioUnitario() + ("€"), p.getCantidad(), sdf.format(p.getFechaPedido())}));
 
         // Forzar la reordenación
         RowSorter<? extends TableModel> sorter = jTable.getRowSorter();

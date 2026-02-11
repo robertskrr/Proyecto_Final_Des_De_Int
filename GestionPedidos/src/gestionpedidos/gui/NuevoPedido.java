@@ -276,6 +276,7 @@ public class NuevoPedido extends javax.swing.JDialog {
         ValidationGroup group = validationPanel.getValidationGroup();
 
         group.add(jTextFieldProducto, StringValidators.REQUIRE_NON_EMPTY_STRING);
+        group.add(jTextFieldProducto, StringValidators.HOST_NAME);
         group.add(jTextFieldPrecioUd, StringValidators.REQUIRE_VALID_NUMBER);
         group.add(jTextFieldPrecioUd, StringValidators.REQUIRE_NON_NEGATIVE_NUMBER);
 
